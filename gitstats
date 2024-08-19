@@ -621,8 +621,8 @@ class GitDataCollector(DataCollector):
         lines = getpipeoutput(
             ['git log --shortstat --date-order --pretty=format:"%%at %%aN" %s' % (getlogrange('HEAD'))]).split('\n')
         lines.reverse()
-        files = 0;
-        inserted = 0;
+        files = 0
+        inserted = 0
         deleted = 0
         author = None
         stamp = 0
@@ -658,7 +658,7 @@ class GitDataCollector(DataCollector):
                 else:
                     print('Warning: unexpected line "%s"' % line)
             else:
-                numbers = getstatsummarycounts(line);
+                numbers = getstatsummarycounts(line)
 
                 if len(numbers) == 3:
                     (files, inserted, deleted) = map(lambda el: int(el), numbers)
@@ -792,24 +792,24 @@ class HTMLReportCreator(ReportCreator):
         self.printNav(f)
 
         f.write('<dl>')
-        f.write('<dt>Project name</dt><dd>%s</dd>' % (data.projectname))
-        f.write('<dt>Generated</dt><dd>%s (in %d seconds)</dd>' % (
+        f.write('<dt>项目名称</dt><dd>%s</dd>' % (data.projectname))
+        f.write('<dt>生成时间</dt><dd>%s (in %d 秒)</dd>' % (
         datetime.datetime.now().strftime(format), time.time() - data.getStampCreated()))
         f.write(
-            '<dt>Generator</dt><dd><a href="http://gitstats.sourceforge.net/">GitStats</a> (version %s), %s, %s</dd>' % (
+            '<dt>生成工具</dt><dd><a href="http://gitstats.sourceforge.net/">GitStats</a> (版本 %s), %s, %s</dd> ' % (
             getversion(), getgitversion(), getgnuplotversion()))
-        f.write('<dt>Report Period</dt><dd>%s to %s</dd>' % (
+        f.write('<dt>报告周期</dt><dd>%s to %s</dd>' % (
         data.getFirstCommitDate().strftime(format), data.getLastCommitDate().strftime(format)))
-        f.write('<dt>Age</dt><dd>%d days, %d active days (%3.2f%%)</dd>' % (
+        f.write('<dt>项目时长</dt><dd>%d 天, %d 提交日 (%3.2f%%)</dd>' % (
         data.getCommitDeltaDays(), len(data.getActiveDays()),
         (100.0 * len(data.getActiveDays()) / data.getCommitDeltaDays())))
-        f.write('<dt>Total Files</dt><dd>%s</dd>' % data.getTotalFiles())
-        f.write('<dt>Total Lines of Code</dt><dd>%s (%d added, %d removed)</dd>' % (
+        f.write('<dt>总文件数</dt><dd>%s</dd>' % data.getTotalFiles())
+        f.write('<dt>总代码行数</dt><dd>%s (增加: %d 行, 移除: %d 行)</dd>' % (
         data.getTotalLOC(), data.total_lines_added, data.total_lines_removed))
-        f.write('<dt>Total Commits</dt><dd>%s (average %.1f commits per active day, %.1f per all days)</dd>' % (
+        f.write('<dt>总提交数</dt><dd>%s (平均 %.1f 提交 / 提交日, %.1f / 日)</dd>' % (
         data.getTotalCommits(), float(data.getTotalCommits()) / len(data.getActiveDays()),
         float(data.getTotalCommits()) / data.getCommitDeltaDays()))
-        f.write('<dt>Authors</dt><dd>%s (average %.1f commits per author)</dd>' % (
+        f.write('<dt>作者</dt><dd>%s (平均 %.1f 提交 / 作者)</dd>' % (
         data.getTotalAuthors(), (1.0 * data.getTotalCommits()) / data.getTotalAuthors()))
         f.write('</dl>')
 
@@ -820,7 +820,7 @@ class HTMLReportCreator(ReportCreator):
         # Activity
         f = open(path + '/activity.html', 'w')
         self.printHeader(f)
-        f.write('<h1>Activity</h1>')
+        f.write('<h1>活动</h1>')
         self.printNav(f)
 
         # f.write('<h2>Last 30 days</h2>')
@@ -829,8 +829,8 @@ class HTMLReportCreator(ReportCreator):
 
         # Weekly activity
         WEEKS = 32
-        f.write(html_header(2, 'Weekly activity'))
-        f.write('<p>Last %d weeks</p>' % WEEKS)
+        f.write(html_header(2, '周活动'))
+        f.write('<p>前 %d 周</p>' % WEEKS)
 
         # generate weeks to show (previous N weeks from now)
         now = datetime.datetime.now()
@@ -863,12 +863,12 @@ class HTMLReportCreator(ReportCreator):
         f.write('</tr></table>')
 
         # Hour of Day
-        f.write(html_header(2, 'Hour of Day'))
+        f.write(html_header(2, '一天每小时'))
         hour_of_day = data.getActivityByHourOfDay()
-        f.write('<table><tr><th>Hour</th>')
+        f.write('<table><tr><th>小时</th>')
         for i in range(0, 24):
             f.write('<th>%d</th>' % i)
-        f.write('</tr>\n<tr><th>Commits</th>')
+        f.write('</tr>\n<tr><th>提交数</th>')
         fp = open(path + '/hour_of_day.dat', 'w')
         for i in range(0, 24):
             if i in hour_of_day:
@@ -899,10 +899,10 @@ class HTMLReportCreator(ReportCreator):
         fg.close()
 
         # Day of Week
-        f.write(html_header(2, 'Day of Week'))
+        f.write(html_header(2, '一周每天'))
         day_of_week = data.getActivityByDayOfWeek()
         f.write('<div class="vtable"><table>')
-        f.write('<tr><th>Day</th><th>Total (%)</th></tr>')
+        f.write('<tr><th>日</th><th>总数 (%)</th></tr>')
         fp = open(path + '/day_of_week.dat', 'w')
         for d in range(0, 7):
             commits = 0
@@ -917,14 +917,14 @@ class HTMLReportCreator(ReportCreator):
                 f.write('<td>0</td>')
             f.write('</tr>')
         f.write('</table></div>')
-        f.write('<img src="day_of_week.png" alt="Day of Week">')
+        f.write('<img src="day_of_week.png" alt="一周每天">')
         fp.close()
 
         # Hour of Week
-        f.write(html_header(2, 'Hour of Week'))
+        f.write(html_header(2, '一周每小时'))
         f.write('<table>')
 
-        f.write('<tr><th>Weekday</th>')
+        f.write('<tr><th>工作日</th>')
         for hour in range(0, 24):
             f.write('<th>%d</th>' % (hour))
         f.write('</tr>')
@@ -948,9 +948,9 @@ class HTMLReportCreator(ReportCreator):
         f.write('</table>')
 
         # Month of Year
-        f.write(html_header(2, 'Month of Year'))
+        f.write(html_header(2, '一年每月提交数'))
         f.write('<div class="vtable"><table>')
-        f.write('<tr><th>Month</th><th>Commits (%)</th></tr>')
+        f.write('<tr><th>Month</th><th>提交数 (%)</th></tr>')
         fp = open(path + '/month_of_year.dat', 'w')
         for mm in range(1, 13):
             commits = 0
@@ -961,42 +961,42 @@ class HTMLReportCreator(ReportCreator):
             fp.write('%d %d\n' % (mm, commits))
         fp.close()
         f.write('</table></div>')
-        f.write('<img src="month_of_year.png" alt="Month of Year">')
+        f.write('<img src="month_of_year.png" alt="一年每月提交数">')
 
         # Commits by year/month
-        f.write(html_header(2, 'Commits by year/month'))
+        f.write(html_header(2, '每年/月提交数'))
         f.write(
-            '<div class="vtable"><table><tr><th>Month</th><th>Commits</th><th>Lines added</th><th>Lines removed</th></tr>')
+            '<div class="vtable"><table><tr><th>月</th><th>提交数</th><th>增加行数</th><th>移除行数</th></tr>')
         for yymm in reversed(sorted(data.commits_by_month.keys())):
             f.write('<tr><td>%s</td><td>%d</td><td>%d</td><td>%d</td></tr>' % (
             yymm, data.commits_by_month.get(yymm, 0), data.lines_added_by_month.get(yymm, 0),
             data.lines_removed_by_month.get(yymm, 0)))
         f.write('</table></div>')
-        f.write('<img src="commits_by_year_month.png" alt="Commits by year/month">')
+        f.write('<img src="commits_by_year_month.png" alt="按年/月提交数">')
         fg = open(path + '/commits_by_year_month.dat', 'w')
         for yymm in sorted(data.commits_by_month.keys()):
             fg.write('%s %s\n' % (yymm, data.commits_by_month[yymm]))
         fg.close()
 
         # Commits by year
-        f.write(html_header(2, 'Commits by Year'))
+        f.write(html_header(2, '每年提交数'))
         f.write(
-            '<div class="vtable"><table><tr><th>Year</th><th>Commits (% of all)</th><th>Lines added</th><th>Lines removed</th></tr>')
+            '<div class="vtable"><table><tr><th>年</th><th>提交数 (% of all)</th><th>增加行数</th><th>移除行数</th></tr>')
         for yy in reversed(sorted(data.commits_by_year.keys())):
             f.write('<tr><td>%s</td><td>%d (%.2f%%)</td><td>%d</td><td>%d</td></tr>' % (
             yy, data.commits_by_year.get(yy, 0), (100.0 * data.commits_by_year.get(yy, 0)) / data.getTotalCommits(),
             data.lines_added_by_year.get(yy, 0), data.lines_removed_by_year.get(yy, 0)))
         f.write('</table></div>')
-        f.write('<img src="commits_by_year.png" alt="Commits by Year">')
+        f.write('<img src="commits_by_year.png" alt="按年提交数">')
         fg = open(path + '/commits_by_year.dat', 'w')
         for yy in sorted(data.commits_by_year.keys()):
             fg.write('%d %d\n' % (yy, data.commits_by_year[yy]))
         fg.close()
 
         # Commits by timezone
-        f.write(html_header(2, 'Commits by Timezone'))
+        f.write(html_header(2, '按时区提交数'))
         f.write('<table><tr>')
-        f.write('<th>Timezone</th><th>Commits</th>')
+        f.write('<th>Timezone</th><th>提交数</th>')
         f.write('</tr>')
         max_commits_on_tz = max(data.commits_by_timezone.values())
         for i in sorted(data.commits_by_timezone.keys(), key=lambda n: int(n)):
@@ -1013,15 +1013,15 @@ class HTMLReportCreator(ReportCreator):
         f = open(path + '/authors.html', 'w')
         self.printHeader(f)
 
-        f.write('<h1>Authors</h1>')
+        f.write('<h1>作者</h1>')
         self.printNav(f)
 
         # Authors :: List of authors
-        f.write(html_header(2, 'List of Authors'))
+        f.write(html_header(2, '作者列表'))
 
         f.write('<table class="authors sortable" id="authors">')
         f.write(
-            '<tr><th>Author</th><th>Commits (%)</th><th>+ lines</th><th>- lines</th><th>First commit</th><th>Last commit</th><th class="unsortable">Age</th><th>Active days</th><th># by commits</th></tr>')
+            '<tr><th>作者</th><th>提交数 (%)</th><th>+ 行数</th><th>- 行数</th><th>首次提交</th><th>最后提交</th><th class="unsortable">时长</th><th>活动天生</th><th>提交排名</th></tr>')
         for author in data.getAuthors(conf['max_authors']):
             info = data.getAuthorInfo(author)
             f.write(
@@ -1036,12 +1036,12 @@ class HTMLReportCreator(ReportCreator):
             rest = allauthors[conf['max_authors']:]
             f.write('<p class="moreauthors">These didn\'t make it to the top: %s</p>' % ', '.join(rest))
 
-        f.write(html_header(2, 'Cumulated Added Lines of Code per Author'))
+        f.write(html_header(2, '累计添加代码行数/作者'))
         f.write('<img src="lines_of_code_by_author.png" alt="Lines of code per Author">')
         if len(allauthors) > conf['max_authors']:
             f.write('<p class="moreauthors">Only top %d authors shown</p>' % conf['max_authors'])
 
-        f.write(html_header(2, 'Commits per Author'))
+        f.write(html_header(2, '提交数/作者'))
         f.write('<img src="commits_by_author.png" alt="Commits per Author">')
         if len(allauthors) > conf['max_authors']:
             f.write('<p class="moreauthors">Only top %d authors shown</p>' % conf['max_authors'])
@@ -1079,10 +1079,10 @@ class HTMLReportCreator(ReportCreator):
         fgc.close()
 
         # Authors :: Author of Month
-        f.write(html_header(2, 'Author of Month'))
+        f.write(html_header(2, '月度作者'))
         f.write('<table class="sortable" id="aom">')
         f.write(
-            '<tr><th>Month</th><th>Author</th><th>Commits (%%)</th><th class="unsortable">Next top %d</th><th>Number of authors</th></tr>' %
+            '<tr><th>月份</th><th>作者</th><th>提交数 (%%)</th><th class="unsortable">Next top %d</th><th>作者数量</th></tr>' %
             conf['authors_top'])
         for yymm in reversed(sorted(data.author_of_month.keys())):
             authordict = data.author_of_month[yymm]
@@ -1096,9 +1096,9 @@ class HTMLReportCreator(ReportCreator):
 
         f.write('</table>')
 
-        f.write(html_header(2, 'Author of Year'))
+        f.write(html_header(2, '年度作者'))
         f.write(
-            '<table class="sortable" id="aoy"><tr><th>Year</th><th>Author</th><th>Commits (%%)</th><th class="unsortable">Next top %d</th><th>Number of authors</th></tr>' %
+            '<table class="sortable" id="aoy"><tr><th>年</th><th>作者</th><th>提交数 (%%)</th><th class="unsortable">Next top %d</th><th>作者数</th></tr>' %
             conf['authors_top'])
         for yy in reversed(sorted(data.author_of_year.keys())):
             authordict = data.author_of_year[yy]
@@ -1112,7 +1112,7 @@ class HTMLReportCreator(ReportCreator):
         f.write('</table>')
 
         # Domains
-        f.write(html_header(2, 'Commits by Domains'))
+        f.write(html_header(2, '按域名提交数'))
         domains_by_commits = getkeyssortedbyvaluekey(data.domains, 'commits')
         domains_by_commits.reverse()  # most first
         f.write('<div class="vtable"><table>')
@@ -1129,7 +1129,7 @@ class HTMLReportCreator(ReportCreator):
             f.write('<tr><th>%s</th><td>%d (%.2f%%)</td></tr>' % (
             domain, info['commits'], (100.0 * info['commits'] / totalcommits)))
         f.write('</table></div>')
-        f.write('<img src="domains.png" alt="Commits by Domains">')
+        f.write('<img src="domains.png" alt="按域名提交数">')
         fp.close()
 
         f.write('</body></html>')
@@ -1139,21 +1139,21 @@ class HTMLReportCreator(ReportCreator):
         # Files
         f = open(path + '/files.html', 'w')
         self.printHeader(f)
-        f.write('<h1>Files</h1>')
+        f.write('<h1>文件</h1>')
         self.printNav(f)
 
         f.write('<dl>\n')
-        f.write('<dt>Total files</dt><dd>%d</dd>' % data.getTotalFiles())
-        f.write('<dt>Total lines</dt><dd>%d</dd>' % data.getTotalLOC())
+        f.write('<dt>总文件数</dt><dd>%d</dd>' % data.getTotalFiles())
+        f.write('<dt>总代码行</dt><dd>%d</dd>' % data.getTotalLOC())
         try:
             f.write(
-                '<dt>Average file size</dt><dd>%.2f bytes</dd>' % (float(data.getTotalSize()) / data.getTotalFiles()))
+                '<dt>平均文件大小</dt><dd>%.2f bytes</dd>' % (float(data.getTotalSize()) / data.getTotalFiles()))
         except ZeroDivisionError:
             pass
         f.write('</dl>\n')
 
         # Files :: File count by date
-        f.write(html_header(2, 'File count by date'))
+        f.write(html_header(2, '按日期文件数'))
 
         # use set to get rid of duplicate/unnecessary entries
         files_by_date = set()
@@ -1168,14 +1168,14 @@ class HTMLReportCreator(ReportCreator):
         #	fg.write('%s %d\n' % (datetime.datetime.fromtimestamp(stamp).strftime('%Y-%m-%d'), data.files_by_stamp[stamp]))
         fg.close()
 
-        f.write('<img src="files_by_date.png" alt="Files by Date">')
+        f.write('<img src="files_by_date.png" alt="按日期文件数">')
 
         # f.write('<h2>Average file size by date</h2>')
 
         # Files :: Extensions
-        f.write(html_header(2, 'Extensions'))
+        f.write(html_header(2, 'Extension'))
         f.write(
-            '<table class="sortable" id="ext"><tr><th>Extension</th><th>Files (%)</th><th>Lines (%)</th><th>Lines/file</th></tr>')
+            '<table class="sortable" id="ext"><tr><th>扩展名</th><th>文件数 (%)</th><th>行数 (%)</th><th>行数/文件</th></tr>')
         for ext in sorted(data.extensions.keys()):
             files = data.extensions[ext]['files']
             lines = data.extensions[ext]['lines']
@@ -1194,15 +1194,15 @@ class HTMLReportCreator(ReportCreator):
         # Lines
         f = open(path + '/lines.html', 'w')
         self.printHeader(f)
-        f.write('<h1>Lines</h1>')
+        f.write('<h1>代码行</h1>')
         self.printNav(f)
 
         f.write('<dl>\n')
-        f.write('<dt>Total lines</dt><dd>%d</dd>' % data.getTotalLOC())
+        f.write('<dt>总代码行</dt><dd>%d</dd>' % data.getTotalLOC())
         f.write('</dl>\n')
 
-        f.write(html_header(2, 'Lines of Code'))
-        f.write('<img src="lines_of_code.png" alt="Lines of Code">')
+        f.write(html_header(2, '代码行'))
+        f.write('<img src="lines_of_code.png" alt="代码行">')
 
         fg = open(path + '/lines_of_code.dat', 'w')
         for stamp in sorted(data.changes_by_date.keys()):
@@ -1216,17 +1216,17 @@ class HTMLReportCreator(ReportCreator):
         # tags.html
         f = open(path + '/tags.html', 'w')
         self.printHeader(f)
-        f.write('<h1>Tags</h1>')
+        f.write('<h1>标签</h1>')
         self.printNav(f)
 
         f.write('<dl>')
-        f.write('<dt>Total tags</dt><dd>%d</dd>' % len(data.tags))
+        f.write('<dt>总标签数</dt><dd>%d</dd>' % len(data.tags))
         if len(data.tags) > 0:
-            f.write('<dt>Average commits per tag</dt><dd>%.2f</dd>' % (1.0 * data.getTotalCommits() / len(data.tags)))
+            f.write('<dt>每个tag平均提交数</dt><dd>%.2f</dd>' % (1.0 * data.getTotalCommits() / len(data.tags)))
         f.write('</dl>')
 
         f.write('<table class="tags">')
-        f.write('<tr><th>Name</th><th>Date</th><th>Commits</th><th>Authors</th></tr>')
+        f.write('<tr><th>名称</th><th>Date</th><th>提交数</th><th>作者</th></tr>')
         # sort the tags by date desc
         tags_sorted_by_date_desc = map(lambda el: el[1],
                                        reversed(sorted(map(lambda el: (el[1]['date'], el[0]), data.tags.items()))))
@@ -1245,7 +1245,7 @@ class HTMLReportCreator(ReportCreator):
         self.createGraphs(path)
 
     def createGraphs(self, path):
-        print('Generating graphs...')
+        print('生成 图表...')
 
         # hour of day
         f = open(path + '/hour_of_day.plot', 'w')
@@ -1467,12 +1467,12 @@ class HTMLReportCreator(ReportCreator):
         f.write("""
 <div class="nav">
 <ul>
-<li><a href="index.html">General</a></li>
-<li><a href="activity.html">Activity</a></li>
-<li><a href="authors.html">Authors</a></li>
-<li><a href="files.html">Files</a></li>
-<li><a href="lines.html">Lines</a></li>
-<li><a href="tags.html">Tags</a></li>
+<li><a href="index.html">通用</a></li>
+<li><a href="activity.html">活动</a></li>
+<li><a href="authors.html">作者</a></li>
+<li><a href="files.html">文件</a></li>
+<li><a href="lines.html">代码行</a></li>
+<li><a href="tags.html">标签</a></li>
 </ul>
 </div>
 """)
@@ -1527,30 +1527,30 @@ class GitStats:
             print('gnuplot not found')
             sys.exit(1)
 
-        print('Output path: %s' % outputpath)
+        print('输出 路径: %s' % outputpath)
         cachefile = os.path.join(outputpath, 'gitstats.cache')
 
         data = GitDataCollector()
         data.loadCache(cachefile)
 
         for gitpath in args[0:-1]:
-            print('Git path: %s' % gitpath)
+            print('Git 路径: %s' % gitpath)
 
             prevdir = os.getcwd()
             os.chdir(gitpath)
 
-            print('Collecting data...')
+            print('收集 数据...')
             data.collect(gitpath)
 
             os.chdir(prevdir)
 
-        print('Refining data...')
+        print('完善 数据...')
         data.saveCache(cachefile)
         data.refine()
 
         os.chdir(rundir)
 
-        print('Generating report...')
+        print('生成 报告...')
         report = HTMLReportCreator()
         report.create(data, outputpath)
 
